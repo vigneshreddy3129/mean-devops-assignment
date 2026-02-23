@@ -63,30 +63,29 @@ mean-devops-assignment/
 # Docker Containerization
 
 ## Backend Dockerfile
----
+```text
 Uses Node 18
 Installs dependencies
 Exposes port 8080
----
+```
 
 ## Frontend Dockerfile
----
+```text
 Multi-stage build
 Builds Angular project
 Serves using Nginx (alpine)
----
+```
 
 #Ubuntu VM Setup (AWS EC2)
 
 ## Launch Ubuntu VM
----
+```text
 OS: Ubuntu 22.04
 Open ports:
 22 (SSH)
 80 (Application)
 8081 (Jenkins)
----
-
+```
 # Install Docker
 ```text
 sudo apt update
