@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-
   mongodb:
     image: mongo:6
     container_name: mongodb
@@ -10,31 +7,31 @@ services:
       - mongo-data:/data/db
 
   backend:
-    build: ./backend
+    image: vignesh0777/mean-backend:latest
     container_name: backend
     restart: always
-    ports:
-      - "8080:8080"
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/tutorials
     depends_on:
       - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/dd_db
+    ports:
+      - "8080:8080"
 
   frontend:
-    build: ./frontend
+    image: vignesh0777/mean-frontend:latest
     container_name: frontend
     restart: always
     depends_on:
       - backend
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     restart: always
     ports:
       - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - frontend
       - backend
