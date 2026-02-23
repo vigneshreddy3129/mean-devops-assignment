@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
+            }
+        }
+
+        stage('Build Backend Image') {
+            steps {
+                sh 'docker build -t vignesh0777/mean-backend:latest ./backend'
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                sh 'docker build -t vignesh0777/mean-frontend:latest ./frontend'
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                sh '''
+                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                docker push vignesh0777/mean-backend:latest
+                docker push vignesh0777/mean-frontend:latest
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                cd /opt/mean-app
+                docker-compose pull
+                docker-compose up -d --force-recreate
+                '''
+            }
+        }
+    }
+}
