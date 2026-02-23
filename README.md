@@ -76,7 +76,7 @@ Builds Angular project
 Serves using Nginx (alpine)
 ```
 
-#Ubuntu VM Setup (AWS EC2)
+# Ubuntu VM Setup (AWS EC2)
 
 ## Launch Ubuntu VM
 ```text
