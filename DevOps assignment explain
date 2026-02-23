@@ -1,0 +1,353 @@
+done in local mission:
+✅ 1️⃣ Repository Setup
+
+✔ created a GitHub repo
+✔ pushed the complete code
+
+🔐 EC2 Security Group Settings
+Make sure these ports are open:
+Port	Purpose
+22	SSH
+80	Nginx
+8080	Backend
+8081	Jenkins
+
+✅ 2️⃣ Containerization & Deployment
+
+✔ Dockerfile for backend
+✔ Dockerfile for frontend
+✔ Docker images built
+✔ Images pushed to Docker Hub (vignesh0777/mean-backend, vignesh0777/mean-frontend)
+✔ Ubuntu VM created (EC2)
+✔ Docker installed
+✔ docker-compose used
+✔ Containers running on VM
+✔ App accessible via public IP
+
+✅ 3️⃣ Database Setup
+
+You are using:
+
+mongo:6  (Docker container)
+
+Mongo is running inside Docker and connected properly.
+
+✅ 4️⃣ Nginx Reverse Proxy
+
+Your app is accessible via:
+
+http://18.60.184.229
+
+Port 80 is serving full application through nginx container.
+
+Requirement says:
+
+The entire application should be accessible via port 80
+
+I have completed:
+Repository Setup ✅
+Dockerization ✅
+Docker Hub push ✅
+VM Deployment ✅
+Mongo setup ✅
+Nginx reverse proxy ✅
+
+
+Dockerized backend & frontend :
+created the vm create files like 1) default.conf  2) docker-compose.yml 
+1)Used docker-compose
+2)Pushed images to Docker Hub
+3)Deployed on AWS EC2
+4)Exposed via Nginx reverse proxy
+
+req files in vm:
+ubuntu@ip-172-31-8-39:~/mean-app$ cat default.conf
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://frontend:80;
+    }
+
+    location /api/ {
+        proxy_pass http://backend:8080/api/;
+    }
+}
+
+ubuntu@ip-172-31-8-39:~/mean-app$ cat default.conf
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://frontend:80;
+    }
+
+    location /api/ {
+        proxy_pass http://backend:8080/api/;
+    }
+}
+
+ubuntu@ip-172-31-8-39:~/mean-app$ cat docker-compose.yml
+services:
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    image: vignesh0777/mean-backend:latest
+    container_name: backend
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/dd_db
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: vignesh0777/mean-frontend:latest
+    container_name: frontend
+    restart: always
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mongo-data:
+ubuntu@ip-172-31-8-39:~/mean-app$
+
+
+commands used in vm:
+   1   sudo apt update -y
+   2   sudo apt upgrade -y
+   3   sudo apt install docker.io -y
+   4   sudo systemctl enable docker
+   5   sudo systemctl start docker
+   6   docker --version
+   7   sudo apt install docker-compose-plugin -y
+   8   docker compose version
+   9   sudo systemctl enable docker
+   10  sudo systemctl start docker
+   11  sudo systemctl enable docker
+   12  sudo systemctl start docker
+   13  docker --version
+   14  sudo apt install docker-compose-plugin -y
+   15  sudo apt update
+   16  sudo apt install curl -y
+   17  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+   18  sudo chmod +x /usr/local/bin/docker-compose
+   19  docker-compose --version
+   20  mkdir mean-app
+   21  cd mean-app
+   22  nano docker-compose.yml
+   23  cat docker-compose.yml
+   24  nano default.conf
+   25  cat default.conf
+   26  ls
+   27  docker-compose pull
+   28  docker-compose up -d
+   29  docker ps
+   30  sudo usermod -aG docker $USER
+   31  exit
+   32  docker ps
+   33  cd mean-app
+   34  docker-compose pull
+   35  docker-compose up -d
+   36  docker ps
+   37  ls
+   38  docker ps
+   39  cat docker-compose.yml
+   40  history
+
+
+
+
+
+I completed:
+Git → Docker → Docker Hub → AWS EC2 → Live Deployment
+
+🚀 CI/CD Automation:
+
+🚨 5️⃣ CI/CD Pipeline Jenkins
+Requirement says:
+Use GitHub Actions or Jenkins
+Build images on push
+Push to Docker Hub
+Auto pull + restart on VM
+
+
+CI/CD Pipeline step by step i use Jenkins :
+GitHub    →     Jenkins      →  Docker Hub   →  EC2 VM
+ push         build & push                  pull & restart
+
+When you push code:
+1)Jenkins pulls code
+2)Builds Docker images //frontend,backed 
+3)Pushes to Docker Hub
+4)SSH into EC2
+5)docker-compose pull
+6)docker-compose up -d
+
+commands:
+sudo apt update
+sudo apt install openjdk-17-jdk -y
+java -version
+
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | sudo tee \
+/usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
+
+sudo apt update
+
+sudo apt install jenkins -y
+sudo systemctl start Jenkins
+
+sudo systemctl enable Jenkins
+sudo systemctl status Jenkins
+
+
+⚠️ IMPORTANT (Port Conflict Fix):
+By default Jenkins runs on 8080.
+If your backend Docker container is already using 8080, Jenkins will fail.
+
+sudo lsof -i :8080       // If already used → change Jenkins port to 8081:
+
+sudo systemctl edit Jenkins  // add
+[Service]
+Environment="JENKINS_PORT=8081"
+
+sudo systemctl daemon-reload
+sudo systemctl restart Jenkins
+
+http://YOUR_PUBLIC_IP:8081 //Access Jenkins
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword   //Get Initial Admin Password
+
+
+-- Install Suggested Plugins--
+2️⃣ Install Required Extra Plugins (Important)
+Go to:
+Manage Jenkins → Plugins → Available Plugins
+Search and install:
+✅ Docker
+✅ Docker Pipeline
+✅ Git
+✅ GitHub Integration
+✅ Pipeline
+Restart Jenkins if required.
+
+🚀 Step 1 — Move Project Folder
+On your VM:
+sudo mkdir -p /opt/mean-app
+sudo cp -r /home/ubuntu/mean-app/* /opt/mean-app/
+
+🚀 Step 2 — Give Jenkins Permission
+sudo chown -R jenkins:jenkins /opt/mean-app
+
+3️⃣ Give Jenkins Permission to Use Docker
+sudo usermod -aG docker jenkins
+sudo systemctl restart Jenkins
+
+4️⃣ Add DockerHub Credentials in Jenkins
+Manage Jenkins → Credentials → Global → Add Credentials
+Choose:
+Kind → Username with password
+Username → your DockerHub username vignesh0777
+Password → your DockerHub password Vignesh123
+ID → dockerhub-creds
+Save
+
+5️⃣ Create First Pipeline Job
+Go to:
+New Item
+Name: mean-app-pipeline
+Select: Pipeline
+Click OK
+
+6️⃣ Configure Pipeline
+Scroll to:
+Pipeline → Definition
+Choose:
+👉 Pipeline script
+Paste this:
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
+            }
+        }
+
+        stage('Build Backend Image') {
+            steps {
+                sh 'docker build -t vignesh0777/mean-backend:latest ./backend'
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                sh 'docker build -t vignesh0777/mean-frontend:latest ./frontend'
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                sh '''
+                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                docker push vignesh0777/mean-backend:latest
+                docker push vignesh0777/mean-frontend:latest
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                cd /opt/mean-app
+                docker-compose pull
+                docker-compose up -d --force-recreate
+                '''
+            }
+        }
+    }
+}
+
+
+.
+
+📌 what idone in Assignment
+Repository Setup → ✅
+Dockerfiles → ✅
+DockerHub → ✅
+VM Setup → ✅
+Docker Compose → ✅
+Database → ✅
+Nginx Reverse Proxy → ✅
+Jenkins CI/CD → ✅ 
+
+
+
+
