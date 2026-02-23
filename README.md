@@ -1,4 +1,4 @@
-<img width="1919" height="1132" alt="cicd-pipeline-jenkins" src="https://github.com/user-attachments/assets/11fe4078-1b5b-4bd6-940d-b3b5fe491e98" /># 🚀 MEAN Stack DevOps Assignment
+
 
 ## Project Objective
 This project demonstrates a complete DevOps implementation for a MEAN stack application including:
