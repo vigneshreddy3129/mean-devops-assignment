@@ -62,14 +62,14 @@ mean-devops-assignment/
 
 # Docker Containerization
 
-Backend Dockerfile
+## Backend Dockerfile
 ---
 Uses Node 18
 Installs dependencies
 Exposes port 8080
 ---
 
-Frontend Dockerfile
+## Frontend Dockerfile
 ---
 Multi-stage build
 Builds Angular project
@@ -78,7 +78,7 @@ Serves using Nginx (alpine)
 
 #Ubuntu VM Setup (AWS EC2)
 
-##Launch Ubuntu VM
+## Launch Ubuntu VM
 ---
 OS: Ubuntu 22.04
 Open ports:
@@ -87,14 +87,14 @@ Open ports:
 8081 (Jenkins)
 ---
 
-#Install Docker
+# Install Docker
 ```text
 sudo apt update
 sudo apt install docker.io -y
 sudo systemctl enable docker
 sudo systemctl start docker
 ```
-#Deploy Application
+# Deploy Application
 ```text
 docker-compose pull
 docker-compose up -d
@@ -103,7 +103,7 @@ Check containers:
 ```text
 docker ps
 ```
-#CI/CD Pipeline (Jenkins)
+# CI/CD Pipeline (Jenkins)
 ---
 Jenkins pipeline stages:
 Clone GitHub repository
@@ -114,12 +114,12 @@ Deploy containers using Docker Compose
 Pipeline automatically triggers on code updates.
 ---
 
-#Docker Hub Images
+# Docker Hub Images
 ```text
 vignesh0777/mean-backend:latest
 vignesh0777/mean-frontend:latest
 ```
-#Nginx Reverse Proxy Configuration
+# Nginx Reverse Proxy Configuration
 ```text
 server {
     listen 80;
@@ -133,11 +133,11 @@ server {
     }
 }
 ```
-#Application accessible at:
+# Application accessible at:
 ---
 http://<EC2_PUBLIC_IP>
 ---
-Verification Commands
+# Verification Commands
 ```text
 docker ps
 docker logs backend
