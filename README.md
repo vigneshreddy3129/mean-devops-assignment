@@ -60,47 +60,68 @@ mean-devops-assignment/
 
 ```
 
-# 🐳 Docker Setup
+# Docker Containerization
 
-## 1️⃣ Build Images (Handled by Jenkins CI)
-
-Images are built and pushed to Docker Hub:
-
-- `vignesh0777/mean-backend:latest`
-- `vignesh0777/mean-frontend:latest`
+## Backend Dockerfile
 
 ---
+Uses Node 18
+Installs dependencies
+Exposes port 8080
+---
 
-# ☁️ VM Deployment (Ubuntu)
+##Frontend Dockerfile
+---
+Multi-stage build
+Builds Angular project
+Serves using Nginx (alpine)
+---
 
-## 1️⃣ Install Docker
+#Ubuntu VM Setup (AWS EC2)
+
+##Launch Ubuntu VM
+---
+OS: Ubuntu 22.04
+Open ports:
+22 (SSH)
+80 (Application)
+8081 (Jenkins)
+---
+
+#Install Docker
 ```text
 sudo apt update
 sudo apt install docker.io -y
 sudo systemctl enable docker
 sudo systemctl start docker
 ```
-# 2️⃣ Deploy Application
+#Deploy Application
 ```text
 docker-compose pull
 docker-compose up -d
 ```
-🔁 CI/CD Pipeline (Jenkins)
+Check containers:
 ```text
-Pipeline stages:
-Clone GitHub Repository
-Build Backend Docker Image
-Build Frontend Docker Image
-Push Images to Docker Hub
-Deploy to Ubuntu VM using Docker Compose
-Pipeline runs automatically when code is updated.
-
+docker ps
 ```
-Nginx Reverse Proxy
-http://<VM_PUBLIC_IP>
-default.conf
-```text
+#CI/CD Pipeline (Jenkins)
+---
+Jenkins pipeline stages:
+Clone GitHub repository
+Build backend Docker image
+Build frontend Docker image
+Push images to Docker Hub
+Deploy containers using Docker Compose
+Pipeline automatically triggers on code updates.
+---
 
+#Docker Hub Images
+```text
+vignesh0777/mean-backend:latest
+vignesh0777/mean-frontend:latest
+```
+#Nginx Reverse Proxy Configuration
+```text
 server {
     listen 80;
 
@@ -112,8 +133,11 @@ server {
         proxy_pass http://backend:8080/;
     }
 }
-All traffic is routed through port 80.
 ```
+#Application accessible at:
+---
+http://<EC2_PUBLIC_IP>
+---
 Verification Commands
 ```text
 docker ps
