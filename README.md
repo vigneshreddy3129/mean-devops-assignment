@@ -11,15 +11,17 @@ This project demonstrates a complete DevOps workflow for a MEAN stack applicatio
 ---
 
 # 🏗️ Architecture Overview
+```text
 
 Frontend (Angular) → Nginx → Backend (Node.js/Express) → MongoDB
+```
 
 All services are containerized and orchestrated using Docker Compose.
 
 ---
 
 # 📦 Technologies Used
-
+```text
 - Node.js
 - Express
 - Angular 15
@@ -29,9 +31,10 @@ All services are containerized and orchestrated using Docker Compose.
 - Jenkins
 - Nginx
 - AWS Ubuntu VM
-
+```
 ---
 # 📁 Project Structure
+```text
 mean-devops-assignment/
 │
 ├── backend/
@@ -45,7 +48,7 @@ mean-devops-assignment/
 ├── Jenkinsfile
 └── README.md
 
----
+```
 
 # 🐳 Docker Setup
 
@@ -61,37 +64,32 @@ Images are built and pushed to Docker Hub:
 # ☁️ VM Deployment (Ubuntu)
 
 ## 1️⃣ Install Docker
-
-
+```text
 sudo apt update
 sudo apt install docker.io -y
 sudo systemctl enable docker
 sudo systemctl start docker
----
+```
 # 2️⃣ Deploy Application
+```text
 docker-compose pull
 docker-compose up -d
----
+```
 🔁 CI/CD Pipeline (Jenkins)
-
+```text
 Pipeline stages:
-
 Clone GitHub Repository
-
 Build Backend Docker Image
-
 Build Frontend Docker Image
-
 Push Images to Docker Hub
-
 Deploy to Ubuntu VM using Docker Compose
-
 Pipeline runs automatically when code is updated.
 
----
-🌐 Nginx Reverse Proxy
+```
+Nginx Reverse Proxy
 http://<VM_PUBLIC_IP>
 default.conf
+```text
 
 server {
     listen 80;
@@ -105,11 +103,11 @@ server {
     }
 }
 All traffic is routed through port 80.
----
-🧪 Verification Commands
-
+```
+Verification Commands
+```text
 docker ps
-
 docker logs backend
 docker logs nginx
+```
 
