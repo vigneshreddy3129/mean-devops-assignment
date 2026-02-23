@@ -1,27 +1,115 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# 🚀 MEAN Stack DevOps Assignment
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+This project demonstrates a complete DevOps workflow for a MEAN stack application including:
 
-## Project setup
+- Docker containerization
+- Docker Hub image publishing
+- Ubuntu VM deployment
+- Jenkins CI/CD pipeline
+- Nginx reverse proxy setup
 
-### Node.js Server
+---
 
-cd backend
+# 🏗️ Architecture Overview
 
-npm install
+Frontend (Angular) → Nginx → Backend (Node.js/Express) → MongoDB
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
+All services are containerized and orchestrated using Docker Compose.
 
-Run `node server.js`
+---
 
-### Angular Client
+# 📦 Technologies Used
 
-cd frontend
+- Node.js
+- Express
+- Angular 15
+- MongoDB
+- Docker
+- Docker Compose
+- Jenkins
+- Nginx
+- AWS Ubuntu VM
 
-npm install
+---
+# 📁 Project Structure
+mean-devops-assignment/
+│
+├── backend/
+│ └── Dockerfile
+│
+├── frontend/
+│ └── Dockerfile
+│
+├── docker-compose.yml
+├── default.conf
+├── Jenkinsfile
+└── README.md
 
-Run `ng serve --port 8081`
+---
 
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
+# 🐳 Docker Setup
 
-Navigate to `http://localhost:8081/`
+## 1️⃣ Build Images (Handled by Jenkins CI)
+
+Images are built and pushed to Docker Hub:
+
+- `vignesh0777/mean-backend:latest`
+- `vignesh0777/mean-frontend:latest`
+
+---
+
+# ☁️ VM Deployment (Ubuntu)
+
+## 1️⃣ Install Docker
+
+
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl enable docker
+sudo systemctl start docker
+---
+# 2️⃣ Deploy Application
+docker-compose pull
+docker-compose up -d
+---
+🔁 CI/CD Pipeline (Jenkins)
+
+Pipeline stages:
+
+Clone GitHub Repository
+
+Build Backend Docker Image
+
+Build Frontend Docker Image
+
+Push Images to Docker Hub
+
+Deploy to Ubuntu VM using Docker Compose
+
+Pipeline runs automatically when code is updated.
+
+---
+🌐 Nginx Reverse Proxy
+http://<VM_PUBLIC_IP>
+default.conf
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://frontend;
+    }
+
+    location /api/ {
+        proxy_pass http://backend:8080/;
+    }
+}
+All traffic is routed through port 80.
+---
+🧪 Verification Commands
+
+docker ps
+
+docker logs backend
+docker logs nginx
+
