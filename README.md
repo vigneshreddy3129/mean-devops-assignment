@@ -13,7 +13,7 @@ This project demonstrates a complete DevOps workflow for a MEAN stack applicatio
 # 🏗️ Architecture Overview
 ```text
 
-Frontend (Angular) → Nginx → Backend (Node.js/Express) → MongoDB
+Frontend  → Nginx → Backend  → MongoDB
 ```
 
 All services are containerized and orchestrated using Docker Compose.
