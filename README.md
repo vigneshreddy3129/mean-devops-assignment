@@ -62,15 +62,14 @@ mean-devops-assignment/
 
 # Docker Containerization
 
-## Backend Dockerfile
-
+Backend Dockerfile
 ---
 Uses Node 18
 Installs dependencies
 Exposes port 8080
 ---
 
-##Frontend Dockerfile
+Frontend Dockerfile
 ---
 Multi-stage build
 Builds Angular project
