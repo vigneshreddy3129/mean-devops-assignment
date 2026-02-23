@@ -142,9 +142,28 @@ docker ps
 docker logs backend
 docker logs nginx
 ```
-#Screenshots
+# Screenshots
 ## 🚀 CI/CD Pipeline Execution
 ![Jenkins Pipeline](screenshots/cicd-pipeline-jenkins.png)
+
+## 🐳 Docker Hub Images
+![Docker Hub Images](screenshots/docker-hub.png)
+
+## ☁️ EC2 Deployment
+![Docker PS Output](screenshots/aws-ec2-instance.png)
+
+## 🌐 Application Running
+![Application UI](screenshots/DD-curd-app-ui-1.png)
+![Application UI](screenshots/DD-curd-app-ui-2.png)
+
+## 🔁 Nginx Reverse Proxy
+![Nginx Config](screenshots/nginx-config.png)
+
+## ☁️ Running Containers on EC2
+![Running Containers](screenshots/docker-containers.png)
+
+## 🔐 EC2 Security Group Configuration
+![Security Groups](screenshots/securtiy-group.png)
 
 
 
