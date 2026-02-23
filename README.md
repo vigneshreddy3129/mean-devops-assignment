@@ -1,6 +1,6 @@
 # 🚀 MEAN Stack DevOps Assignment
 
-This project demonstrates a complete DevOps workflow for a MEAN stack application including:
+## Project Objective
 
 - Docker containerization
 - Docker Hub image publishing
