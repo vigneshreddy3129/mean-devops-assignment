@@ -25,23 +25,15 @@ Port	Purpose
 ✔ App accessible via public IP
 
 ✅ 3️⃣ Database Setup
-
 You are using:
-
 mongo:6  (Docker container)
-
 Mongo is running inside Docker and connected properly.
 
 ✅ 4️⃣ Nginx Reverse Proxy
-
 Your app is accessible via:
-
 http://18.60.184.229
-
 Port 80 is serving full application through nginx container.
-
 Requirement says:
-
 The entire application should be accessible via port 80
 
 I have completed:
