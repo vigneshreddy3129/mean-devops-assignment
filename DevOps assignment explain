@@ -1,10 +1,10 @@
-done in local mission:
-✅ 1️⃣ Repository Setup
+# done in local mission:
+ ## ✅ 1️⃣ Repository Setup
 
 ✔ created a GitHub repo
 ✔ pushed the complete code
 
-🔐 EC2 Security Group Settings
+## 🔐 EC2 Security Group Settings
 Make sure these ports are open:
 Port	Purpose
 22	SSH
@@ -12,7 +12,7 @@ Port	Purpose
 8080	Backend
 8081	Jenkins
 
-✅ 2️⃣ Containerization & Deployment
+## ✅ 2️⃣ Containerization & Deployment
 
 ✔ Dockerfile for backend
 ✔ Dockerfile for frontend
@@ -24,19 +24,19 @@ Port	Purpose
 ✔ Containers running on VM
 ✔ App accessible via public IP
 
-✅ 3️⃣ Database Setup
+## ✅ 3️⃣ Database Setup
 You are using:
 mongo:6  (Docker container)
 Mongo is running inside Docker and connected properly.
 
-✅ 4️⃣ Nginx Reverse Proxy
+## ✅ 4️⃣ Nginx Reverse Proxy
 Your app is accessible via:
 http://18.60.184.229
 Port 80 is serving full application through nginx container.
 Requirement says:
 The entire application should be accessible via port 80
 
-I have completed:
+## I have completed:
 Repository Setup ✅
 Dockerization ✅
 Docker Hub push ✅
@@ -45,14 +45,14 @@ Mongo setup ✅
 Nginx reverse proxy ✅
 
 
-Dockerized backend & frontend :
+## Dockerized backend & frontend :
 created the vm create files like 1) default.conf  2) docker-compose.yml 
 1)Used docker-compose
 2)Pushed images to Docker Hub
 3)Deployed on AWS EC2
 4)Exposed via Nginx reverse proxy
 
-req files in vm:
+## req files in vm:
 ubuntu@ip-172-31-8-39:~/mean-app$ cat default.conf
 server {
     listen 80;
@@ -123,7 +123,7 @@ volumes:
 ubuntu@ip-172-31-8-39:~/mean-app$
 
 
-commands used in vm:
+## commands used in vm:
    1   sudo apt update -y
    2   sudo apt upgrade -y
    3   sudo apt install docker.io -y
@@ -169,12 +169,12 @@ commands used in vm:
 
 
 
-I completed:
+## I completed:
 Git → Docker → Docker Hub → AWS EC2 → Live Deployment
 
-🚀 CI/CD Automation:
+# 🚀 CI/CD Automation:
 
-🚨 5️⃣ CI/CD Pipeline Jenkins
+## 🚨 5️⃣ CI/CD Pipeline Jenkins
 Requirement says:
 Use GitHub Actions or Jenkins
 Build images on push
@@ -182,11 +182,11 @@ Push to Docker Hub
 Auto pull + restart on VM
 
 
-CI/CD Pipeline step by step i use Jenkins :
+## CI/CD Pipeline step by step i use Jenkins :
 GitHub    →     Jenkins      →  Docker Hub   →  EC2 VM
  push         build & push                  pull & restart
 
-When you push code:
+## When you push code:
 1)Jenkins pulls code
 2)Builds Docker images //frontend,backed 
 3)Pushes to Docker Hub
@@ -194,7 +194,7 @@ When you push code:
 5)docker-compose pull
 6)docker-compose up -d
 
-commands:
+## commands:
 sudo apt update
 sudo apt install openjdk-17-jdk -y
 java -version
@@ -214,7 +214,7 @@ sudo systemctl enable Jenkins
 sudo systemctl status Jenkins
 
 
-⚠️ IMPORTANT (Port Conflict Fix):
+## ⚠️ IMPORTANT (Port Conflict Fix):
 By default Jenkins runs on 8080.
 If your backend Docker container is already using 8080, Jenkins will fail.
 
