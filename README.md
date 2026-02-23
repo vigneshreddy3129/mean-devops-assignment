@@ -1,10 +1,11 @@
 # 🚀 MEAN Stack DevOps Assignment
 
 ## Project Objective
+This project demonstrates a complete DevOps implementation for a MEAN stack application including:
 
 - Docker containerization
-- Docker Hub image publishing
-- Ubuntu VM deployment
+- Docker Hub image publishing //fronted & backed 
+- Ubuntu VM deployment (AWS EC2)
 - Jenkins CI/CD pipeline
 - Nginx reverse proxy setup
 
@@ -13,7 +14,16 @@
 # 🏗️ Architecture Overview
 ```text
 
-Frontend  → Nginx → Backend  → MongoDB
+Client Browser
+⬇
+Nginx (Port 80)
+⬇
+Frontend (Angular Container)
+⬇
+Backend (Node.js/Express Container)
+⬇
+MongoDB (Docker Container)
+
 ```
 
 All services are containerized and orchestrated using Docker Compose.
