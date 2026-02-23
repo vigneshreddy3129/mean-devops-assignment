@@ -32,15 +32,15 @@ All services are containerized and orchestrated using Docker Compose.
 
 # 📦 Technologies Used
 ```text
-- Node.js
-- Express
-- Angular 15
-- MongoDB
-- Docker
-- Docker Compose
-- Jenkins
-- Nginx
-- AWS Ubuntu VM
+Node.js
+Express.js
+Angular 15
+MongoDB
+Docker
+Docker Compose
+Jenkins
+Nginx
+AWS EC2 (Ubuntu 22.04)
 ```
 ---
 # 📁 Project Structure
