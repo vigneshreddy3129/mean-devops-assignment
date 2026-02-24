@@ -1,4 +1,6 @@
+## 🔗  Live Application: 
 
+http://18.60.184.229
 
 ## Project Objective
 This project demonstrates a complete DevOps implementation for a MEAN stack application including:
