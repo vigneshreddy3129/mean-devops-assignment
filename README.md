@@ -63,21 +63,122 @@ sudo usermod -aG docker jenkins
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 ```
-
-## Login to Docker Hub on Jenkins Server
+# Essential Jenkins Plugins
+- Go to:
 ```
-docker login
-Username:
-Password:
+Jenkins Dashboard
+→ Manage Jenkins
+→ Plugins
+→ Available Plugins
+```
+## Install these plugins.
+- Source Code Management
+Required to pull code from GitHub.
+```
+Git plugin
+GitHub plugin
+GitHub Branch Source
+```
+Purpose: Jenkins → Clone GitHub repository
+-Pipeline Plugins
+Required for Jenkinsfile pipelines.
+```
+Pipeline
+Pipeline: Stage View
+Pipeline: GitHub Groovy Libraries
+```
+Purpose: Run CI/CD pipeline stages
+- Docker Plugins
+Required to build and push Docker images using Docker.
+```
+Docker Pipeline
+Docker plugin
+```
+Purpose:
+Jenkins → Build container images
+Jenkins → Push images to DockerHub
+- Kubernetes Plugins
+Required to deploy containers to Kubernetes.
+```
+Kubernetes CLI Plugin
+Kubernetes Plugin
+```
+Purpose: Jenkins → Run kubectl commands
+- AWS Plugins
+Needed for authentication and interaction with Amazon Web Services.
+```
+AWS Credentials
+Amazon ECR plugin (optional if using ECR later)
+```
+Purpose: Jenkins → Access AWS services
+- Useful Utility Plugins
+Recommended for better pipeline visualization.
+```
+Blue Ocean
+Workspace Cleanup
+Credentials Binding
+```
+## Jenkins Tools Configuration
+- Go to:
+```
+Manage Jenkins
+→ Global Tool Configuration
+```
+Here you configure tools Jenkins will use.
+-Git Tool Configuration
+Inside Global Tool Configuration → Git
+```
+Name: git
+Path: /usr/bin/git
+```
+Verify on server: git --version
+- Docker Configuration
+Jenkins uses Docker installed on the server.
+```
+docker --version
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins
+sudo su - jenkins
+docker ps
+```
+- AWS CLI Tool
+Install AWS CLI on Jenkins server:
+```
+sudo apt install awscli -y
+aws --version
+aws sts get-caller-identity
+```
+- kubectl Configuration
+Install kubectl:
+```
+curl -LO https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+kubectl version --client
+```
+- Configure Access to EKS
+```
+aws eks update-kubeconfig \
+--region ap-south-2 \
+--name three-tier-cluster
+kubectl get nodes
+```
+If nodes appear → Jenkins can deploy.
+## Configure DockerHub Credentials in Jenkins
+-go to
+```
+Manage Jenkins
+→ Credentials
+→ Global
+```
+- Add credentials:
+```
+Kind: Username with password
+ID: dockerhub
+Username: vignesh0777
+Password: Vignesh123
 ```
 
-## Install plugins:
--- Run inside Jenkins EC2
-- Docker
-- Kubernetes
-- Git
-- Pipeline
-- Amazon ECR
 
 ## Install Tools
 -- Run inside Jenkins EC2
@@ -318,33 +419,37 @@ pipeline {
 
  stages {
 
- stage('Clone Repo'){
- steps{
- git branch: 'main', url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
+ stage('Clone Repo') {
+ steps {
+ git branch: 'main',
+ url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
  }
  }
 
- stage('Build Images'){
- steps{
+ stage('Build Images') {
+ steps {
  sh 'docker build -t vignesh0777/mean-backend ./backend'
  sh 'docker build -t vignesh0777/mean-frontend ./frontend'
  }
  }
- stage('Docker Login'){
- steps{
-  sh 'docker login -u vignesh0777 -p Vignesh123'
- }
-}
 
- stage('Push Images'){
- steps{
+ stage('Docker Login') {
+ steps {
+ withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+ sh 'echo $PASS | docker login -u $USER --password-stdin'
+ }
+ }
+ }
+
+ stage('Push Images') {
+ steps {
  sh 'docker push vignesh0777/mean-backend'
  sh 'docker push vignesh0777/mean-frontend'
  }
  }
 
- stage('Deploy to EKS'){
- steps{
+ stage('Deploy to EKS') {
+ steps {
  sh 'kubectl apply -f k8s/'
  sh 'kubectl rollout restart deployment backend'
  sh 'kubectl rollout restart deployment frontend'
