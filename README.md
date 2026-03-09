@@ -1,16 +1,24 @@
-🚀 CI/CD Pipeline: Jenkins + EKS + ECR + Kubernetes
+# 🚀 CI/CD Pipeline: Jenkins + EKS + ECR + Kubernetes
+
 This project demonstrates a complete CI/CD pipeline using:
 
-Amazon EKS
-Jenkins
-Amazon ECR
-Docker
-Kubernetes (HPA + Ingress)
-📌 Architecture Flow
+- Amazon EKS
+- Jenkins
+- Amazon ECR
+- Docker
+- Kubernetes (HPA + Ingress)
+
+---
+
+# 📌 Architecture Flow
+
 Developer → GitHub → Jenkins → Docker Build → ECR → EKS → Kubernetes Pods
 
-Create Jenkins Server (EC2)
-📍 AWS Console → EC2 → Launch Instance
+---
+# Create Jenkins Server (EC2)
+- 📍 AWS Console → EC2 → Launch Instance
+
+```
 AMI: Ubuntu 22
 Type: t2.medium
 Ports:
@@ -18,10 +26,14 @@ Ports:
 8080
 80
 443
-Connect to EC2
-Install Required Packages
+```
+- Connect to EC2
+
+---
+## Install Required Packages
 -- Run inside Jenkins EC2
 
+```bash
 sudo apt update -y
 sudo apt install docker.io -y
 sudo systemctl start docker
@@ -49,47 +61,68 @@ sudo usermod -aG docker jenkins
 
 
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-Login to Docker Hub on Jenkins Server
+
+```
+
+## Login to Docker Hub on Jenkins Server
+```
 docker login
 Username:
 Password:
-Install plugins:
+```
+
+## Install plugins:
+-- Run inside Jenkins EC2
+- Docker
+- Kubernetes
+- Git
+- Pipeline
+- Amazon ECR
+
+## Install Tools
 -- Run inside Jenkins EC2
 
-Docker
-Kubernetes
-Git
-Pipeline
-Amazon ECR
-Install Tools
--- Run inside Jenkins EC2
-
-AWS CLI
+- AWS CLI
+```bash
 sudo apt install awscli -y
 aws --version
-kubectl
+ ```
+- kubectl
+```bash
 curl -LO https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
-eksctl
+```
+- eksctl
+```bash
 curl --silent --location \
 "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" \
 | tar xz -C /tmp
 
 sudo mv /tmp/eksctl /usr/local/bin
-verify
+```
+- verify
+```bash
 eksctl version
 kubectl version --client
-Configure AWS Credentials
-Run inside Jenkins EC2
+```
+## Configure AWS Credentials
+- Run inside Jenkins EC2
+```bash
 aws configure
-enter
+```
+- enter
+```
 AWS Access Key
 AWS Secret Key
 Region
 Output format
-Create EKS Cluster
-Run inside Jenkins EC2
+```
+
+## Create EKS Cluster
+- Run inside Jenkins EC2
+
+```bash
 eksctl create cluster \
 --name three-tier-cluster \
 --region ap-south-1 \
@@ -99,20 +132,30 @@ eksctl create cluster \
 --nodes-min 2 \
 --nodes-max 5 \
 --managed
-This creates:
+```
+- This creates:
+```
 VPC
 EKS control plane
 Worker nodes
-Check nodes
+```
+- Check nodes
+```
 kubectl get nodes
-Kubernetes Deployment Files
+```
+
+# Kubernetes Deployment Files
+```
 mkdir k8s
 cd k8s
-In Kubernetes we create
-deployments
-services
-MongoDB Deployment
-nano mongodb-deployment.yaml
+```
+## In Kubernetes we create
+- deployments
+- services
+  
+## MongoDB Deployment
+- nano mongodb-deployment.yaml
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -132,8 +175,12 @@ spec:
         image: mongo:6
         ports:
         - containerPort: 27017
-Service
+```
+- Service
+```
 nano mongodb-service.yaml
+```
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -144,8 +191,12 @@ spec:
   ports:
   - port: 27017
     targetPort: 27017
-Backend Deployment
+```
+## Backend Deployment
+```
 backend-deployment.yaml
+```
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -168,8 +219,13 @@ spec:
         env:
         - name: MONGO_URL
           value: mongodb://mongodb:27017/dd_db
-Service
+```
+
+- Service
+```
 nano backend-service.yaml
+```
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -180,8 +236,14 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-Frontend Deployment
+```
+
+
+## Frontend Deployment
+```
 nano frontend-deployment.yaml
+```
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -201,8 +263,12 @@ spec:
         image: vignesh0777/mean-frontend:latest
         ports:
         - containerPort: 80
-Service
+```
+- Service
+```
  nano frontend-service.yaml
+```
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -214,8 +280,10 @@ spec:
   ports:
   - port: 80
     targetPort: 80
-Deploy to Kubernetes
-Run on Jenkins EC2
+```
+## Deploy to Kubernetes
+- Run on Jenkins EC2
+```
 kubectl apply -f mongodb-deployment.yaml
 kubectl apply -f mongodb-service.yaml
 
@@ -224,17 +292,27 @@ kubectl apply -f backend-service.yaml
 
 kubectl apply -f frontend-deployment.yaml
 kubectl apply -f frontend-service.yaml
-Check
+```
+- Check
+```
 kubectl get pods
 kubectl get svc
-Enable Pod Auto Scaling
-kubectl autoscale deployment backend --cpu-percent=50 --min=2 --max=6
-Check
-kubectl get hpa
-Now pods automatically scale
+```
 
-Jenkins Pipeline (Auto Deploy)
-Create Jenkins Pipeline Job Pipeline script
+## Enable Pod Auto Scaling
+```
+kubectl autoscale deployment backend --cpu-percent=50 --min=2 --max=6
+```
+- Check
+```
+kubectl get hpa
+```
+Now pods automatically scale
+## Jenkins Pipeline (Auto Deploy)
+- Create Jenkins Pipeline Job
+Pipeline script
+
+```
 pipeline {
  agent any
 
@@ -275,14 +353,23 @@ pipeline {
 
  }
 }
-GitHub Webhook
-GitHub repo Settings Webhooks
+```
+## GitHub Webhook
+- GitHub repo
+Settings
+Webhooks
+```
 - Add
 http://JENKINS_IP:8080/github-webhook/
-Now whenever developer pushes code:
+```
+# Now whenever developer pushes code:
+---
 GitHub → Jenkins → Build Image → Push → Deploy to EKS → Pods Updated
-What Happens Now (Automation)
-When developer pushes code:
+---
+
+# What Happens Now (Automation)
+- When developer pushes code:
+```
 GitHub Push
 ↓
 Jenkins Pipeline
@@ -300,3 +387,6 @@ Traffic served via LoadBalancer
 HPA scales pods
 ↓
 Nodegroup scales servers
+```
+
+
