@@ -1,48 +1,44 @@
 pipeline {
-    agent any
+ agent any
 
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-    }
+ stages {
 
-    stages {
+ stage('Clone Repo') {
+ steps {
+ git branch: 'main',
+ url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
+ }
+ }
 
-        stage('Clone Repository') {
-            steps {
-                git branch: 'main', url: 'https://github.com/vigneshreddy3129/mean-devops-assignment.git'
-            }
-        }
+ stage('Build Images') {
+ steps {
+ sh 'docker build -t vignesh0777/mean-backend ./backend'
+ sh 'docker build -t vignesh0777/mean-frontend ./frontend'
+ }
+ }
 
-        stage('Build Backend Image') {
-            steps {
-                sh 'docker build -t vignesh0777/mean-backend:latest ./backend'
-            }
-        }
+ stage('Docker Login') {
+ steps {
+ withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+ sh 'echo $PASS | docker login -u $USER --password-stdin'
+ }
+ }
+ }
 
-        stage('Build Frontend Image') {
-            steps {
-                sh 'docker build -t vignesh0777/mean-frontend:latest ./frontend'
-            }
-        }
+ stage('Push Images') {
+ steps {
+ sh 'docker push vignesh0777/mean-backend'
+ sh 'docker push vignesh0777/mean-frontend'
+ }
+ }
 
-        stage('Push Images') {
-            steps {
-                sh '''
-                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                docker push vignesh0777/mean-backend:latest
-                docker push vignesh0777/mean-frontend:latest
-                '''
-            }
-        }
+ stage('Deploy to EKS') {
+ steps {
+ sh 'kubectl apply -f k8s/'
+ sh 'kubectl rollout restart deployment backend'
+ sh 'kubectl rollout restart deployment frontend'
+ }
+ }
 
-        stage('Deploy') {
-            steps {
-                sh '''
-                cd /opt/mean-app
-                docker-compose pull
-                docker-compose up -d --force-recreate
-                '''
-            }
-        }
-    }
+ }
 }
